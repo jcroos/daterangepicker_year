@@ -1,0 +1,89 @@
+<html>
+	<head>
+		<script src="jquery.min.js"></script>
+		<script src="moment.min.js"></script>
+		<link href="bootstrap.min.css" rel="stylesheet" type="text/css" />
+		<link href="daterangepicker.css" rel="stylesheet" />
+		<script src="daterangepicker.js"></script>
+
+		<script language="javascript" type="text/javascript">
+        //====================================================================
+        // DOCUMENT READY
+        //====================================================================
+        $(document).ready(function(){
+          $("#txtQryFromToDt").daterangepicker({
+            ranges: {
+              'Today'       : [moment(), moment()],
+              'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+              'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+              'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+              'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+              'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+              'This Financial Year': [
+                moment().month(3).startOf('month').year(
+                  moment().month() < 3 ? moment().year() - 1 : moment().year()
+                ),
+                moment().month(2).endOf('month').year(
+                  moment().month() < 3 ? moment().year() : moment().year() + 1
+                )
+              ],
+
+              // Previous Financial Year (April - March)
+              'Last Financial Year': [
+                moment().month(3).startOf('month').year(
+                  moment().month() < 3 ? moment().year() - 2 : moment().year() - 1
+                ),
+                moment().month(2).endOf('month').year(
+                  moment().month() < 3 ? moment().year() - 1 : moment().year()
+                )
+              ]              
+            },
+            locale: {
+              format     : 'DD-MMM-YYYY',
+              cancelLabel: 'Clear'
+            },
+            startDate : moment().startOf('month'),
+            endDate   : moment().endOf('month'),
+            autoApply : true
+          });
+
+          $("#txtQryFromToDt").on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('DD-MMM-YYYY') + ' - ' + picker.endDate.format('DD-MMM-YYYY'));
+          });
+
+         
+          ClearQryPeriod();
+        });
+
+        //=======================================================================
+        // ClearQryPeriod
+        //=======================================================================
+        function ClearQryPeriod(){
+          $("#txtQryFromToDt").val('');
+        }
+				
+    </script>				
+	</head>
+	
+	<body>
+		<div class="card-body">
+			<form name="frmCpAccountTrxList" id="frmCpAccountTrxList" method="post">
+				<div class="row">
+															 
+					<div class="col-md-3">
+						<div class="form-group">
+							<label for="txtQryFromToDt">Period</label>
+							<div class="input-group">
+								<input class="form-control" type="text" id="txtQryFromToDt" name="txtQryFromToDt">
+								</input>
+								<span class="input-group-addon btn btn-warning input-sm" onclick="ClearQryPeriod()">
+									<i class="fa fa-eraser"></i>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</body>
+</html>
